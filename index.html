@@ -176,14 +176,80 @@
             overflow: hidden;
             transition: max-height 0.5s ease, padding 0.3s ease;
         }
+        
+        .all-lectures-card .card-content {
+            max-height: none !important;
+            overflow: visible;
+        }
 
         .card-content.expanded {
-            max-height: 5000px;
+            max-height: 10000px; /* Увеличено, чтобы вместить вложенные карточки */
         }
 
         .card-inner {
             padding: 0 20px 20px;
         }
+
+        /* --- STYLES FOR NESTED SUB-CARDS --- */
+        .sub-card {
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: rgba(0,0,0,0.02);
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .sub-card {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .sub-card-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0,0,0,0.03);
+            border-bottom: 1px solid transparent;
+            transition: background-color 0.2s;
+        }
+        
+        .sub-card-header:hover {
+            background-color: rgba(0,0,0,0.06);
+        }
+
+        [data-theme="dark"] .sub-card-header {
+             background-color: rgba(255,255,255,0.05);
+        }
+        [data-theme="dark"] .sub-card-header:hover {
+             background-color: rgba(255,255,255,0.08);
+        }
+
+        .sub-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sub-card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background-color: var(--card-bg);
+        }
+        
+        .sub-card-content.expanded {
+            max-height: 5000px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .sub-card-inner {
+            padding: 20px;
+        }
+        /* ----------------------------------- */
 
         .task-list {
             list-style-type: none;
@@ -302,7 +368,30 @@
             padding: 15px;
             border-radius: 8px;
             margin-top: 15px;
+            margin-bottom: 15px;
             border-left: 4px solid var(--accent-color);
+        }
+
+        .practice-warning {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left: 4px solid #e74c3c;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+        }
+        
+        [data-theme="dark"] .practice-warning {
+            background-color: rgba(231, 76, 60, 0.2);
+        }
+
+        .guide-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9rem;
         }
 
         footer {
@@ -350,7 +439,7 @@
                 padding: 15px;
             }
             
-            .card-header, .card-inner {
+            .card-header, .card-inner, .sub-card-header {
                 padding: 15px;
             }
             
@@ -383,6 +472,7 @@
     </header>
 
     <main>
+        <!-- Карточка лекций - всегда раскрыта -->
         <div class="all-lectures-card">
             <div class="card-header">
                 <div class="card-title">
@@ -390,9 +480,6 @@
                         <i class="fas fa-folder-open"></i> Все лекции на Яндекс.Диске
                     </div>
                     <p>Все записи лекций, которые проходили дистанционно, находятся здесь</p>
-                </div>
-                <div class="toggle-icon">
-                    <i class="fas fa-folder-open"></i>
                 </div>
             </div>
             <div class="card-content expanded">
@@ -459,7 +546,7 @@
                         <li>
                             <span class="task-number">5</span>
                             <div class="task-content">
-                                Итоговая работа</strong>. Самая объёмная и сложная работа. Но самое печальное, что попытка сдать работу всего одна, так как преподаватель уйдёт в отпуск с 18-го декабря, соответственно, работы она проверять не будет до января, а значит исправить работу, если с ней что-то будет не так, не получится. Преподаватель сказала, что работа должна быть идеальна сразу. Всё, что нужно сделать указано в разделе «Контроль знаний студентов». Остальное можно найти в лекциях по этому предмету. Файл назвать: <strong>Фамилия И.О., группа ИТ-511(З), ИР (ЭАПД)</strong>.
+                                Итоговая работа. Самая объёмная и сложная работа. Но самое печальное, что попытка сдать работу всего одна, так как преподаватель уйдёт в отпуск с 18-го декабря, соответственно, работы она проверять не будет до января, а значит исправить работу, если с ней что-то будет не так, не получится. Преподаватель сказала, что работа должна быть идеальна сразу. Всё, что нужно сделать указано в разделе «Контроль знаний студентов». Остальное можно найти в лекциях по этому предмету. Файл назвать: <strong>Фамилия И.О., группа ИТ-511(З), ИР (ЭАПД)</strong>.
                             </div>
                         </li>
                     </ul>
@@ -579,7 +666,7 @@
                         </li>
                         <li>
                             <span class="task-number">1</span>
-                            <div class="task-content">Нужно сделать все задания, что есть в разделе «Контроль знаний студентов». В «ИТОГ» ничего не заливаем, там преподаватель поставит оценку за курс. Делайте тупо по примерам, которые есть в разделе «Методические разработки к практическим и лабораторным занятиям». Курсовая работа состоит из отдельных заданий, таких как анализ предметной области, формирование требований и т.д. Главы в том же порядке, что и отдельные работы, то есть сверху вниз.</div>
+                            <div class="task-content">Нужно сделать все задания, что есть в разделе «Контроль знаний студентов». В «ИТОГ» ничего не заливаем, там преподаватель поставит оценку за курс. Делайте тупо по примерам, которые есть в разделе «Методические разработки к практическим и лабораторным занятиям». Курсовая работа состоит из отдельных заданий, таких как анализ предметной области, формирование требований и т.д. Главы в том же порядке, что и отдельные работы, то есть сверху вниз. Как только сделаете все работы по отдельности, и преподаватель у вас их проверит, вы должны будете все файлы объединить в один курсач и загрузить в BB до начала сессии. Это обязательно!</div>
                         </li>
                     </ul>
                     
@@ -609,78 +696,173 @@
                 <div class="card-title">
                     <div class="subject-name">Дипломные работы или проекты кафедра АТиС на ж.д. тр-те</div>
                 </div>
-                <div class="deadline">Крайний срок: 15.01.2026</div>
+                <div class="deadline">Крайний срок ВКР: 15.01.2026</div>
                 <div class="toggle-icon">
                     <i class="fas fa-chevron-down"></i>
                 </div>
             </div>
             <div class="card-content">
                 <div class="card-inner">
-                    <div class="diploma-important">
-                        <strong>Важно:</strong> Оригинал заявления сдать в Б3-17 с 10:00 до 14:00 до 15 января.
-                    </div>
                     
-                    <ul class="task-list">
-                        <li>
-                            <span class="task-number">0</span>
-                            <div class="task-content">Проверить, что зачислены в группу в BB.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">1</span>
-                            <div class="task-content">Определиться с темой ВКР (диплома).</div>
-                        </li>
-                        <li>
-                            <span class="task-number">2</span>
-                            <div class="task-content">Выбрать научного руководителя диплома.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">3</span>
-                            <div class="task-content">Написать преподу о желании писать диплом под его началом.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">4</span>
-                            <div class="task-content">Вместе с преподавателем выбрать тему диплома (можно свою, а можно из файла "Примерный список тем ВКР").</div>
-                        </li>
-                        <li>
-                            <span class="task-number">5</span>
-                            <div class="task-content">Написать Русаковой, что выбрал преподавателя и тему на диплом.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">6</span>
-                            <div class="task-content">Заполнить заявление в печатном виде, распечатать, подписать, отсканировать, отправить преподавателю для подписи, затем прикрепить в BB.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">7</span>
-                            <div class="task-content">Принести до 15 января оригинал заявления и сдать его в Б3-17 с 10:00 до 14:00.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">8</span>
-                            <div class="task-content">Расписаться в протоколе собрания в том же кабинете.</div>
-                        </li>
-                    </ul>
-                    
-                    <div class="lectures-section">
-                        <div class="lectures-title">
-                            <i class="fas fa-video"></i> Лекция по дипломной работе
+                    <!-- ПОДКАРТОЧКА 1: ВКР -->
+                    <div class="sub-card">
+                        <div class="sub-card-header" onclick="toggleSubCard(this)">
+                            <div class="sub-card-title">
+                                <i class="fas fa-graduation-cap"></i> ВКР, Диплом
+                            </div>
+                            <div class="toggle-icon">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
                         </div>
-                        <div class="links">
-                            <a href="https://disk.yandex.ru/i/Jqq4MHX25qWJkA" class="link-btn" target="_blank">
-                                <i class="fas fa-graduation-cap"></i> Лекция по ВКР
-                            </a>
+                        <div class="sub-card-content">
+                            <div class="sub-card-inner">
+                                <div class="diploma-important">
+                                    <strong>Важно:</strong> Оригинал заявления сдать в Б3-17 с 10:00 до 14:00 до 15 января.
+                                </div>
+                                
+                                <ul class="task-list">
+                                    <li>
+                                        <span class="task-number">0</span>
+                                        <div class="task-content">Проверить, что зачислены в группу в BB.</div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">1</span>
+                                        <div class="task-content">Определиться с темой ВКР (диплома).</div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">2</span>
+                                        <div class="task-content">Выбрать научного руководителя диплома.</div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">3</span>
+                                        <div class="task-content">Написать преподу о желании писать диплом под его началом.</div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">4</span>
+                                        <div class="task-content">Вместе с преподавателем выбрать тему диплома (можно свою, а можно из файла "Примерный список тем ВКР").</div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">5</span>
+                                        <div class="task-content">Написать Русаковой, что выбрал преподавателя и тему на диплом.</div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">6</span>
+                                        <div class="task-content">Заполнить заявление в печатном виде, распечатать, подписать, отсканировать, отправить преподавателю для подписи, затем прикрепить в BB.</div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">7</span>
+                                        <div class="task-content">Принести до 15 января оригинал заявления и сдать его в Б3-17 с 10:00 до 14:00.</div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">8</span>
+                                        <div class="task-content">Расписаться в протоколе собрания в том же кабинете.</div>
+                                    </li>
+                                </ul>
+                                
+                                <div class="lectures-section">
+                                    <div class="lectures-title">
+                                        <i class="fas fa-video"></i> Материалы по ВКР
+                                    </div>
+                                    <div class="links">
+                                        <a href="https://disk.yandex.ru/i/Jqq4MHX25qWJkA" class="link-btn" target="_blank">
+                                            <i class="fas fa-graduation-cap"></i> Лекция по ВКР
+                                        </a>
+                                        <a href="https://disk.yandex.ru/i/Sr18EeiYLHtqfg" class="link-btn" target="_blank">
+                                            <i class="fas fa-users"></i> Таблица с преподавателями
+                                        </a>
+                                        <a href="https://disk.yandex.ru/i/oN2CArZY5ogM7A" class="link-btn" target="_blank">
+                                            <i class="fas fa-file-pdf"></i> Примерный список тем ВКР
+                                        </a>
+                                        <a href="https://disk.yandex.ru/i/xTWWN_4erulNug" class="link-btn" target="_blank">
+                                            <i class="fas fa-file-word"></i> Шаблон заявления на ВКР
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ПОДКАРТОЧКА 2: ПРАКТИКА -->
+                    <div class="sub-card">
+                        <div class="sub-card-header" onclick="toggleSubCard(this)">
+                            <div class="sub-card-title">
+                                <i class="fas fa-briefcase"></i> Производственная практика (преддипломная практика)
+                            </div>
+                            <div class="toggle-icon">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="sub-card-content">
+                            <div class="sub-card-inner">
+                                <div class="practice-warning">
+                                    <strong><i class="fas fa-exclamation-triangle"></i> Даты прохождения практики:</strong> 30.03.2026 - 25.04.2026.<br>
+                                    После 25.04.2026 будут сформированы приказы о допуске к диплому. <strong>Если есть долги – отчисление из института.</strong>
+                                </div>
+
+                                <ul class="task-list">
+                                    <li>
+                                        <span class="task-number">1</span>
+                                        <div class="task-content">
+                                            <strong>Информация о практике:</strong><br>
+                                            Практику можно проходить в институте (как и в прошлые разы).<br>
+                                            Практика называется: <em>Производственная практика (преддипломная практика)</em>.<br>
+                                            Руководитель практики = Руководитель ВКР.
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">2</span>
+                                        <div class="task-content">
+                                            <strong>Отчёт:</strong> В отчёте будет 1-я глава ВКР (анализ предметной области). Шаблон отчёта есть в BB (и по ссылке ниже).
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">3</span>
+                                        <div class="task-content">
+                                            <strong>Документы:</strong> Заполнить «ЭСАК» и «Лист журнала инструктажа» (как и раньше).
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <span class="task-number">4</span>
+                                        <div class="task-content">
+                                            <strong>Куда грузить?</strong><br>
+                                            Заходим в BB, раздел «Контроль знаний студентов», находим папку «Преддипломная практика».
+                                            <div class="guide-box">
+                                                <ul style="list-style: none;">
+                                                    <li><i class="fas fa-arrow-right" style="color: var(--accent-color);"></i> «ЭСАК» загружаем в <strong>«Док-ты по практике»</strong></li>
+                                                    <li><i class="fas fa-arrow-right" style="color: var(--accent-color);"></i> «Лист журнала инструктажа» в <strong>«Инструктаж по ОТ и ТБ»</strong></li>
+                                                    <li><i class="fas fa-arrow-right" style="color: var(--accent-color);"></i> «Отчёт» в <strong>«Отчет по преддипломной практике»</strong></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                                <div class="lectures-section">
+                                    <div class="lectures-title">
+                                        <i class="fas fa-link"></i> Материалы для практики
+                                    </div>
+                                    <div class="links">
+                                        <a href="https://disk.yandex.ru/i/Id__MvQ1MAIIAQ" class="link-btn" target="_blank">
+                                            <i class="fas fa-video"></i> Лекция по практике
+                                        </a>
+                                        <a href="https://disk.yandex.ru/i/BXdjcTaSF3sPsg" class="link-btn file" target="_blank">
+                                            <i class="fas fa-file-excel"></i> ЭСАК
+                                        </a>
+                                        <a href="https://disk.yandex.ru/i/lrrjC4ONU4_7EA" class="link-btn file" target="_blank">
+                                            <i class="fas fa-file-pdf"></i> Лист журнала инструктажа
+                                        </a>
+                                        <a href="https://disk.yandex.ru/i/zxASux6oIFgxkQ" class="link-btn file" target="_blank">
+                                            <i class="fas fa-file-word"></i> Шаблон отчёта
+                                        </a>
+                                    </div>
+                                    <p style="margin-top: 15px; font-size: 0.85rem; opacity: 0.8; font-style: italic;">
+                                        Все файлы, которые можно здесь обнаружить, редактировались, дополнялись и корректировались мной. Нетронутые точно такие же файлы можно найти в BB.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="links">
-                        <a href="https://disk.yandex.ru/i/Sr18EeiYLHtqfg" class="link-btn" target="_blank">
-                            <i class="fas fa-users"></i> Таблица с преподавателями
-                        </a>
-                        <a href="https://disk.yandex.ru/i/oN2CArZY5ogM7A" class="link-btn" target="_blank">
-                            <i class="fas fa-file-pdf"></i> Примерный список тем ВКР
-                        </a>
-                        <a href="https://disk.yandex.ru/i/xTWWN_4erulNug" class="link-btn" target="_blank">
-                            <i class="fas fa-file-word"></i> Шаблон заявления на ВКР
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -715,7 +897,7 @@
         }
         
         function toggleCard(header) {
-            const card = header.closest('.all-lectures-card, .subject-card');
+            const card = header.closest('.subject-card');
             const content = card.querySelector('.card-content');
             const icon = header.querySelector('.toggle-icon i');
             
@@ -728,14 +910,28 @@
             }
         }
         
+        function toggleSubCard(header) {
+            const card = header.closest('.sub-card');
+            const content = card.querySelector('.sub-card-content');
+            const icon = header.querySelector('.toggle-icon i');
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.className = 'fas fa-chevron-down';
+            } else {
+                content.classList.add('expanded');
+                icon.className = 'fas fa-chevron-up';
+            }
+            event.stopPropagation();
+        }
+        
         const expandAllBtn = document.getElementById('expandAllBtn');
         const expandAllIcon = expandAllBtn.querySelector('i');
         let allExpanded = false;
         
         expandAllBtn.addEventListener('click', () => {
-            const cards = document.querySelectorAll('.all-lectures-card, .subject-card');
-            const contents = document.querySelectorAll('.card-content');
-            const icons = document.querySelectorAll('.card-header .toggle-icon i');
+            const contents = document.querySelectorAll('.subject-card .card-content');
+            const icons = document.querySelectorAll('.subject-card .toggle-icon i');
             
             if (allExpanded) {
                 contents.forEach(content => content.classList.remove('expanded'));
@@ -769,17 +965,11 @@
         });
         
         document.addEventListener('DOMContentLoaded', () => {
-            const contents = document.querySelectorAll('.card-content');
-            const icons = document.querySelectorAll('.card-header .toggle-icon i');
+            const contents = document.querySelectorAll('.subject-card .card-content');
+            const icons = document.querySelectorAll('.subject-card .toggle-icon i');
             
             contents.forEach(content => content.classList.remove('expanded'));
             icons.forEach(icon => icon.className = 'fas fa-chevron-down');
-            
-            const allLecturesCard = document.querySelector('.all-lectures-card');
-            const allLecturesContent = allLecturesCard.querySelector('.card-content');
-            const allLecturesIcon = allLecturesCard.querySelector('.toggle-icon i');
-            allLecturesContent.classList.add('expanded');
-            allLecturesIcon.className = 'fas fa-folder-open';
         });
     </script>
 </body>
