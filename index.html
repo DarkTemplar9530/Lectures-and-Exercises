@@ -183,14 +183,13 @@
         }
 
         .card-content.expanded {
-            max-height: 10000px; /* Увеличено, чтобы вместить вложенные карточки */
+            max-height: 10000px;
         }
 
         .card-inner {
             padding: 0 20px 20px;
         }
 
-        /* --- STYLES FOR NESTED SUB-CARDS --- */
         .sub-card {
             margin-top: 20px;
             border: 1px solid var(--border-color);
@@ -249,7 +248,6 @@
         .sub-card-inner {
             padding: 20px;
         }
-        /* ----------------------------------- */
 
         .task-list {
             list-style-type: none;
@@ -384,6 +382,20 @@
         [data-theme="dark"] .practice-warning {
             background-color: rgba(231, 76, 60, 0.2);
         }
+        
+        .debts-alert {
+            background-color: rgba(231, 76, 60, 0.1);
+            border: 1px solid #e74c3c;
+            border-left: 5px solid #e74c3c;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        [data-theme="dark"] .debts-alert {
+            background-color: rgba(231, 76, 60, 0.15);
+        }
 
         .guide-box {
             background-color: var(--card-bg);
@@ -491,6 +503,16 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- ВАЖНОЕ ПРЕДУПРЕЖДЕНИЕ О ДОЛГАХ -->
+        <div class="debts-alert">
+            <h3 style="color: #c0392b; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-exclamation-triangle"></i> ВНИМАНИЕ: СРОКИ СДАЧИ ДОЛГОВ
+            </h3>
+            <p style="margin-bottom: 10px;">Все долги необходимо сдать до конца следующей сессии, то есть до <strong>6-го февраля (пятница)</strong> без комиссионной пересдачи.</p>
+            <p style="margin-bottom: 10px;">А дальше до <strong>25.04.2026</strong>, но с комиссией.</p>
+            <p style="font-weight: 700; color: #c0392b;">После 25.04.2026 будут сформированы приказы о допуске к диплому. Если есть долги – отчисление из института.</p>
         </div>
 
         <div class="subject-card">
@@ -659,6 +681,11 @@
             </div>
             <div class="card-content">
                 <div class="card-inner">
+                    <!-- Добавлено предупреждение для Богдановой -->
+                    <div class="practice-warning" style="margin-top: 0; margin-bottom: 20px;">
+                        <strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> КУРСАЧ НЕОБХОДИМО РАСПЕЧАТАТЬ И ПРИНЕСТИ НА ЭКЗАМЕН!
+                    </div>
+
                     <ul class="task-list">
                         <li>
                             <span class="task-number">0</span>
@@ -666,7 +693,7 @@
                         </li>
                         <li>
                             <span class="task-number">1</span>
-                            <div class="task-content">Нужно сделать все задания, что есть в разделе «Контроль знаний студентов». В «ИТОГ» ничего не заливаем, там преподаватель поставит оценку за курс. Делайте тупо по примерам, которые есть в разделе «Методические разработки к практическим и лабораторным занятиям». Курсовая работа состоит из отдельных заданий, таких как анализ предметной области, формирование требований и т.д. Главы в том же порядке, что и отдельные работы, то есть сверху вниз. Как только сделаете все работы по отдельности, и преподаватель у вас их проверит, вы должны будете все файлы объединить в один курсач и загрузить в BB до начала сессии. Это обязательно!</div>
+                            <div class="task-content">Нужно сделать все задания, что есть в разделе «Контроль знаний студентов». В «ИТОГ» ничего не заливаем, там преподаватель поставит оценку за курс. Делайте тупо по примерам, которые есть в разделе «Методические разработки к практическим и лабораторным занятиям». Курсовая работа состоит из отдельных заданий, таких как анализ предметной области, формирование требований и т.д. Главы в том же порядке, что и отдельные работы, то есть сверху вниз. Как только сделаете все работы по отдельности, и преподаватель у вас их проверит, вы должны будете все файлы объединить в один курсач и загрузить в BB до начала сессии.</div>
                         </li>
                     </ul>
                     
