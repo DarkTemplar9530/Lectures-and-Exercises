@@ -291,6 +291,12 @@
         [data-theme="dark"] .link-btn.excel { color: #55efc4; border-color: #55efc4; }
         [data-theme="dark"] .link-btn.excel:hover { background-color: #55efc4; color: #1a1a2e; }
 
+        /* PowerPoint */
+        .link-btn.ppt { color: #d35400; border-color: #d35400; }
+        .link-btn.ppt:hover { background-color: #d35400; color: #fff; }
+        [data-theme="dark"] .link-btn.ppt { color: #e67e22; border-color: #e67e22; }
+        [data-theme="dark"] .link-btn.ppt:hover { background-color: #e67e22; color: #1a1a2e; }
+
         /* PDF */
         .link-btn.pdf { color: #c0392b; border-color: #c0392b; }
         .link-btn.pdf:hover { background-color: #c0392b; color: #fff; }
@@ -452,14 +458,44 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* Адаптивность */
+        /* Адаптивность для мобильных устройств (Строгий центр для всех карточек) */
         @media (max-width: 768px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .card-diploma, .card-practice { aspect-ratio: auto; padding: 30px 20px; flex-direction: row; justify-content: flex-start; gap: 20px; text-align: left; }
-            .card-diploma .card-icon, .card-practice .card-icon { margin-bottom: 0; font-size: 2.5rem; }
-            .card-diploma::before, .card-practice::before { left: 0; width: 5px; height: 100%; }
-            .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .toggle-icon { align-self: flex-end; }
+            .dashboard-grid { 
+                grid-template-columns: 1fr; 
+            }
+            
+            /* Сбрасываем стили, чтобы все карточки на мобилке выглядели строго одинаково */
+            .dash-card { 
+                flex-direction: column !important; 
+                justify-content: center !important; 
+                align-items: center !important;
+                text-align: center !important; 
+                padding: 30px 20px !important; 
+                gap: 15px !important;
+                aspect-ratio: auto !important;
+            }
+            
+            .dash-card .card-icon { 
+                margin-bottom: 0 !important; 
+                font-size: 3.5rem !important; 
+            }
+            
+            /* Полоска сверху для всех карточек */
+            .dash-card::before { 
+                left: 0 !important; 
+                top: 0 !important;
+                width: 100% !important; 
+                height: 5px !important; 
+            }
+            
+            .card-header { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 10px; 
+            }
+            .toggle-icon { 
+                align-self: flex-end; 
+            }
         }
     </style>
 </head>
@@ -540,9 +576,10 @@
                             <li>
                                 <span class="task-number">2</span>
                                 <div class="task-content">
-                                    <strong>Содержание раздела "Экономика" ВКР (Объём 7-15 страниц):</strong>
+                                    <strong>Раздел Экономика в ВКР</strong>
+                                    <div style="margin-top: 5px; font-weight: 500;">Содержание раздела (Объём 7-15 страниц):</div>
                                     
-                                    <div style="margin-top: 15px; padding-left: 15px; border-left: 3px solid var(--accent-color);">
+                                    <div style="margin-top: 10px; padding-left: 15px; border-left: 3px solid var(--accent-color);">
                                         
                                         <div style="margin-bottom: 12px;">
                                             <strong>Введение</strong>
@@ -579,6 +616,29 @@
                                     </div>
                                 </div>
                             </li>
+                            <li>
+                                <span class="task-number">3</span>
+                                <div class="task-content">
+                                    <strong>Графическая часть</strong>
+                                    
+                                    <div style="color: #e74c3c; font-weight: bold; margin-top: 8px; margin-bottom: 10px;">
+                                        <i class="fas fa-exclamation-triangle"></i> Загружать на проверку, ТОЛЬКО после согласования Раздела Экономика!
+                                    </div>
+                                    
+                                    <div style="margin-bottom: 5px;">
+                                        Название документа, загружаемого на проверку: <strong>Фамилия И.О., группа (слайд раздела Экономика ВКР)</strong>
+                                    </div>
+                                    <div>
+                                        Подготовить слайд по результатам раздела Экономика.
+                                    </div>
+                                    
+                                    <div class="links" style="margin-top: 12px;">
+                                        <a href="https://disk.yandex.ru/i/IrZp0JKqEZ0gbA" class="link-btn ppt" target="_blank">
+                                            <i class="fas fa-file-powerpoint"></i> Пример оформления слайда по Экономике
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
                         </ul>
                         
                         <div class="lectures-section">
@@ -586,8 +646,7 @@
                                 <i class="fas fa-video"></i> Лекция
                             </div>
                             <div class="links">
-                                <!-- Заглушка для ссылки -->
-                                <a href="#" class="link-btn video" target="_blank"><i class="fas fa-video"></i> Лекция по Экономике (скоро)</a>
+                                <a href="https://disk.yandex.ru/i/CEjvxV134UfMWA" class="link-btn video" target="_blank"><i class="fas fa-video"></i> Лекция по Экономике</a>
                             </div>
                         </div>
                     </div>
