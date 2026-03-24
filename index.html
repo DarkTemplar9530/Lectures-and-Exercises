@@ -3,19 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>План учебных работ</title>
+    <title>План учебных работ - Дашборд</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg-color: #ffffff;
+            --bg-color: #f4f7f6;
             --text-color: #333333;
-            --card-bg: #f9f9f9;
+            --card-bg: #ffffff;
             --border-color: #e0e0e0;
             --accent-color: #2c3e50;
             --hover-color: #3498db;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --lectures-color: #27ae60;
-            --file-color: #e67e22;
+            --shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+            --card-hover-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+            
+            /* Цвета разделов */
+            --color-diploma: #e74c3c;
+            --color-practice: #f39c12;
+            --color-lectures: #27ae60;
+            --color-subjects: #3498db;
         }
 
         [data-theme="dark"] {
@@ -24,17 +29,20 @@
             --card-bg: #16213e;
             --border-color: #2d3748;
             --accent-color: #64b5f6;
-            --hover-color: #90caf9;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            --lectures-color: #2ecc71;
-            --file-color: #f39c12;
+            --shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            --card-hover-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+            
+            --color-diploma: #ff7675;
+            --color-practice: #fdcb6e;
+            --color-lectures: #55efc4;
+            --color-subjects: #74b9ff;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
         }
 
         body {
@@ -43,8 +51,11 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             padding: 20px;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header {
@@ -54,22 +65,17 @@
             margin-bottom: 30px;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--border-color);
-            flex-wrap: wrap;
-            gap: 15px;
         }
 
         h1 {
             font-size: 1.8rem;
             color: var(--accent-color);
-        }
-
-        .controls {
             display: flex;
+            align-items: center;
             gap: 10px;
-            flex-wrap: wrap;
         }
 
-        .theme-toggle, .expand-all-btn {
+        .theme-toggle {
             background: none;
             border: 2px solid var(--accent-color);
             color: var(--accent-color);
@@ -80,226 +86,249 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            white-space: nowrap;
+            font-weight: 600;
         }
 
-        .theme-toggle:hover, .expand-all-btn:hover {
+        .theme-toggle:hover {
             background-color: var(--accent-color);
-            color: var(--bg-color);
+            color: var(--card-bg);
         }
 
-        .all-lectures-card, .subject-card {
-            background-color: var(--card-bg);
+        /* Предупреждение о долгах */
+        .debts-alert {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-left: 5px solid #e74c3c;
             border-radius: 10px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .all-lectures-card {
-            border-left: 5px solid var(--lectures-color);
-        }
-
-        .subject-card {
-            border-left: 5px solid var(--accent-color);
-        }
-
-        .card-header {
             padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        [data-theme="dark"] .debts-alert { background-color: rgba(231, 76, 60, 0.15); }
+
+        /* --- СЕТКА ДАШБОРДА --- */
+        #dashboard-view {
+            animation: fadeIn 0.4s ease;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .dash-card {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
             cursor: pointer;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
         }
 
-        .all-lectures-card .card-header {
-            border-bottom: 1px solid var(--border-color);
-            cursor: default;
+        .dash-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
         }
 
-        .subject-card .card-header {
-            border-bottom: 1px solid var(--border-color);
+        .dash-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
         }
 
         .card-title {
-            flex: 1;
-            min-width: 250px;
-        }
-
-        .all-lectures-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: var(--lectures-color);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 5px;
-        }
-
-        .subject-name {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--accent-color);
-            margin-bottom: 5px;
-        }
-
-        .instructor {
-            font-size: 1rem;
-            color: var(--text-color);
-            opacity: 0.9;
-        }
-
-        .deadline {
-            background-color: var(--accent-color);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .toggle-icon {
             font-size: 1.2rem;
-            color: var(--accent-color);
-            transition: transform 0.3s ease;
+            font-weight: 700;
+            color: var(--text-color);
         }
 
-        .all-lectures-card .toggle-icon {
-            color: var(--lectures-color);
+        .card-diploma { aspect-ratio: 4 / 3; }
+        .card-diploma::before { background-color: var(--color-diploma); }
+        .card-diploma .card-icon { color: var(--color-diploma); }
+
+        .card-practice { aspect-ratio: 4 / 3; }
+        .card-practice::before { background-color: var(--color-practice); }
+        .card-practice .card-icon { color: var(--color-practice); }
+
+        .card-lectures { grid-column: 1 / -1; padding: 25px 20px; flex-direction: row; gap: 20px; justify-content: flex-start; }
+        .card-lectures::before { background-color: var(--color-lectures); left: 0; width: 5px; height: 100%; }
+        .card-lectures .card-icon { color: var(--color-lectures); font-size: 2.5rem; margin-bottom: 0; }
+
+        .card-subjects { grid-column: 1 / -1; padding: 25px 20px; flex-direction: row; gap: 20px; justify-content: flex-start; }
+        .card-subjects::before { background-color: var(--color-subjects); left: 0; width: 5px; height: 100%; }
+        .card-subjects .card-icon { color: var(--color-subjects); font-size: 2.5rem; margin-bottom: 0; }
+
+        /* --- ВНУТРЕННИЕ СТРАНИЦЫ --- */
+        .page-view {
+            display: none;
+            animation: slideIn 0.4s ease;
         }
 
-        .card-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease, padding 0.3s ease;
-        }
-        
-        .all-lectures-card .card-content {
-            max-height: none !important;
-            overflow: visible;
+        .page-view.active {
+            display: block;
         }
 
-        .card-content.expanded {
-            max-height: 10000px;
-        }
-
-        .card-inner {
-            padding: 0 20px 20px;
-        }
-
-        .sub-card {
-            margin-top: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background-color: rgba(0,0,0,0.02);
-            overflow: hidden;
-        }
-
-        [data-theme="dark"] .sub-card {
-            background-color: rgba(255,255,255,0.02);
-        }
-
-        .sub-card-header {
-            padding: 15px 20px;
-            cursor: pointer;
+        .view-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: rgba(0,0,0,0.03);
-            border-bottom: 1px solid transparent;
-            transition: background-color 0.2s;
-        }
-        
-        .sub-card-header:hover {
-            background-color: rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        [data-theme="dark"] .sub-card-header {
-             background-color: rgba(255,255,255,0.05);
-        }
-        [data-theme="dark"] .sub-card-header:hover {
-             background-color: rgba(255,255,255,0.08);
+        .back-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .sub-card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent-color);
+        .back-btn:hover {
+            background-color: var(--border-color);
+        }
+
+        .view-title {
+            font-size: 1.8rem;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .sub-card-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
+        /* --- КОНТЕНТ ВНУТРИ СТРАНИЦ --- */
+        .content-card {
             background-color: var(--card-bg);
-        }
-        
-        .sub-card-content.expanded {
-            max-height: 5000px;
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .sub-card-inner {
-            padding: 20px;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
         }
 
-        .task-list {
-            list-style-type: none;
-            margin-top: 15px;
-        }
-
+        .task-list { list-style-type: none; }
         .task-list li {
-            padding: 10px 0;
+            padding: 15px 0;
             border-bottom: 1px dashed var(--border-color);
             display: flex;
             align-items: flex-start;
         }
-
-        .task-list li:last-child {
-            border-bottom: none;
-        }
+        .task-list li:last-child { border-bottom: none; }
 
         .task-number {
             display: inline-block;
-            width: 26px;
-            height: 26px;
+            width: 28px; height: 28px;
             background-color: var(--accent-color);
             color: white;
             border-radius: 50%;
             text-align: center;
-            line-height: 26px;
-            margin-right: 12px;
+            line-height: 28px;
+            margin-right: 15px;
             flex-shrink: 0;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            font-weight: bold;
         }
 
-        .task-content {
-            flex: 1;
+        .task-content { flex: 1; }
+        .task-content strong { color: var(--accent-color); }
+
+        /* --- КНОПКИ ССЫЛОК (ЦВЕТНЫЕ) --- */
+        .links {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .task-content strong {
-            color: var(--accent-color);
-        }
-
-        .file-link {
-            color: var(--file-color);
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 15px;
+            border-radius: 6px;
             text-decoration: none;
+            font-size: 0.9rem;
             font-weight: 500;
-            border-bottom: 1px dashed var(--file-color);
-            transition: all 0.2s;
         }
 
-        .file-link:hover {
-            color: var(--accent-color);
-            border-bottom: 1px solid var(--accent-color);
+        /* Видео */
+        .link-btn.video { color: #8e44ad; border-color: #8e44ad; }
+        .link-btn.video:hover { background-color: #8e44ad; color: #fff; }
+        [data-theme="dark"] .link-btn.video { color: #a29bfe; border-color: #a29bfe; }
+        [data-theme="dark"] .link-btn.video:hover { background-color: #a29bfe; color: #1a1a2e; }
+
+        /* Word */
+        .link-btn.word { color: #2980b9; border-color: #2980b9; }
+        .link-btn.word:hover { background-color: #2980b9; color: #fff; }
+        [data-theme="dark"] .link-btn.word { color: #74b9ff; border-color: #74b9ff; }
+        [data-theme="dark"] .link-btn.word:hover { background-color: #74b9ff; color: #1a1a2e; }
+
+        /* Excel */
+        .link-btn.excel { color: #27ae60; border-color: #27ae60; }
+        .link-btn.excel:hover { background-color: #27ae60; color: #fff; }
+        [data-theme="dark"] .link-btn.excel { color: #55efc4; border-color: #55efc4; }
+        [data-theme="dark"] .link-btn.excel:hover { background-color: #55efc4; color: #1a1a2e; }
+
+        /* PDF */
+        .link-btn.pdf { color: #c0392b; border-color: #c0392b; }
+        .link-btn.pdf:hover { background-color: #c0392b; color: #fff; }
+        [data-theme="dark"] .link-btn.pdf { color: #ff7675; border-color: #ff7675; }
+        [data-theme="dark"] .link-btn.pdf:hover { background-color: #ff7675; color: #1a1a2e; }
+
+        /* Папки / Обычные ссылки */
+        .link-btn.folder { color: #16a085; border-color: #16a085; }
+        .link-btn.folder:hover { background-color: #16a085; color: #fff; }
+        [data-theme="dark"] .link-btn.folder { color: #00cec9; border-color: #00cec9; }
+        [data-theme="dark"] .link-btn.folder:hover { background-color: #00cec9; color: #1a1a2e; }
+
+        .file-link { color: #e67e22; text-decoration: none; font-weight: 500; border-bottom: 1px dashed #e67e22; }
+        .file-link:hover { color: var(--accent-color); border-bottom: 1px solid var(--accent-color); }
+
+        /* Кнопка "Открыть все лекции" */
+        .main-lectures-btn {
+            background-color: var(--color-lectures);
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: opacity 0.3s, transform 0.3s;
+            font-weight: 600;
+        }
+        .main-lectures-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        [data-theme="dark"] .main-lectures-btn {
+            color: #1a1a2e;
         }
 
+        /* --- ОРИГИНАЛЬНЫЙ БЛОК ЛЕКЦИЙ --- */
         .lectures-section {
             margin-top: 25px;
             padding-top: 15px;
@@ -316,588 +345,625 @@
             gap: 8px;
         }
 
-        .links {
-            margin-top: 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .link-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .link-btn:hover {
-            background-color: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .link-btn.file {
-            border-color: var(--file-color);
-            color: var(--file-color);
-        }
-
-        .link-btn.file:hover {
-            background-color: var(--file-color);
-            color: white;
-        }
-
-        .total {
-            margin-top: 15px;
-            padding: 12px;
-            background-color: var(--border-color);
-            border-radius: 5px;
-            font-weight: 500;
-        }
-
-        .diploma-important {
-            background-color: rgba(52, 152, 219, 0.1);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--accent-color);
-        }
-
-        .practice-warning {
+        /* Предупреждения */
+        .warning-box {
             background-color: rgba(231, 76, 60, 0.1);
             border-left: 4px solid #e74c3c;
             padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-            font-size: 0.95rem;
+            border-radius: 6px;
+            margin-bottom: 20px;
         }
         
-        [data-theme="dark"] .practice-warning {
-            background-color: rgba(231, 76, 60, 0.2);
-        }
-        
-        .debts-alert {
-            background-color: rgba(231, 76, 60, 0.1);
-            border: 1px solid #e74c3c;
-            border-left: 5px solid #e74c3c;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-        }
-        
-        [data-theme="dark"] .debts-alert {
-            background-color: rgba(231, 76, 60, 0.15);
-        }
-
         .guide-box {
-            background-color: var(--card-bg);
+            background-color: var(--bg-color);
             border: 1px solid var(--border-color);
-            padding: 10px;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 8px;
             margin-top: 10px;
-            font-size: 0.9rem;
         }
 
-        footer {
-            margin-top: 40px;
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.9rem;
-            color: var(--text-color);
-            opacity: 0.7;
+        /* --- ТАЙМЛАЙН (ГРАФИК ГИА) --- */
+        .timeline-container {
+            margin-top: 10px;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 20px 0 10px 15px;
+            padding-left: 25px;
+            border-left: 3px solid var(--accent-color);
         }
 
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .timeline-item:last-child { margin-bottom: 0; }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 2px;
+            width: 14px;
+            height: 14px;
+            background-color: var(--card-bg);
+            border: 3px solid var(--accent-color);
+            border-radius: 50%;
+        }
+
+        .timeline-date {
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .timeline-content { font-size: 0.95rem; }
+        
+        .timeline-item.important::before { border-color: #e74c3c; }
+        .timeline-item.important .timeline-date { color: #e74c3c; }
+        
+        .timeline-item.vacation::before { border-color: #f39c12; background-color: #f39c12; }
+        .timeline-item.vacation .timeline-date { color: #f39c12; }
+
+        /* --- АККОРДЕОНЫ ДЛЯ ПРЕДМЕТОВ И РАЗДЕЛОВ ДИПЛОМА --- */
+        .subject-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0,0,0,0.02);
+        }
+
+        [data-theme="dark"] .card-header { background-color: rgba(255,255,255,0.02); }
+
+        .card-header:hover { background-color: rgba(0,0,0,0.05); }
+        [data-theme="dark"] .card-header:hover { background-color: rgba(255,255,255,0.05); }
+
+        .subject-name { font-size: 1.2rem; font-weight: 600; color: var(--accent-color); margin-bottom: 5px; }
+        .instructor { font-size: 0.9rem; opacity: 0.8; }
+        
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .card-content.expanded { max-height: 5000px; }
+        .card-inner { padding: 0 20px 20px; border-top: 1px solid var(--border-color); }
+
+        .expand-all-btn {
+            background: none; border: 1px solid var(--accent-color); color: var(--accent-color);
+            padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.9rem;
+        }
+        .expand-all-btn:hover { background-color: var(--accent-color); color: white; }
+
+        /* Анимации */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Адаптивность */
         @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .controls {
-                justify-content: center;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .deadline {
-                align-self: flex-start;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-                text-align: center;
-            }
-            
-            .subject-name {
-                font-size: 1.2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 15px;
-            }
-            
-            .card-header, .card-inner, .sub-card-header {
-                padding: 15px;
-            }
-            
-            .link-btn {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .controls {
-                flex-direction: column;
-            }
-            
-            .theme-toggle, .expand-all-btn {
-                justify-content: center;
-            }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .card-diploma, .card-practice { aspect-ratio: auto; padding: 30px 20px; flex-direction: row; justify-content: flex-start; gap: 20px; text-align: left; }
+            .card-diploma .card-icon, .card-practice .card-icon { margin-bottom: 0; font-size: 2.5rem; }
+            .card-diploma::before, .card-practice::before { left: 0; width: 5px; height: 100%; }
+            .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .toggle-icon { align-self: flex-end; }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1><i class="fas fa-tasks"></i> План выполнения учебных работ</h1>
-        <div class="controls">
-            <button class="theme-toggle" id="themeToggle">
-                <i class="fas fa-moon"></i> Сменить тему
-            </button>
-            <button class="expand-all-btn" id="expandAllBtn">
-                <i class="fas fa-expand-alt"></i> Развернуть все
-            </button>
-        </div>
+        <h1><i class="fas fa-graduation-cap"></i> Учебный план</h1>
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i> Тема
+        </button>
     </header>
 
     <main>
-        <!-- Карточка лекций - всегда раскрыта -->
-        <div class="all-lectures-card">
-            <div class="card-header">
-                <div class="card-title">
-                    <div class="all-lectures-title">
-                        <i class="fas fa-folder-open"></i> Все лекции на Яндекс.Диске
-                    </div>
-                    <p>Все записи лекций, которые проходили дистанционно, находятся здесь</p>
+        <!-- ================= ГЛАВНЫЙ ЭКРАН (ДАШБОРД) ================= -->
+        <div id="dashboard-view" class="page-view active">
+            
+            <div class="debts-alert">
+                <h3 style="color: #c0392b; margin-bottom: 10px;"><i class="fas fa-exclamation-triangle"></i> ВНИМАНИЕ: СРОКИ СДАЧИ ДОЛГОВ</h3>
+                <p>Долги необходимо сдать до <strong>25.04.2026</strong>.</p>
+                <p style="font-weight: bold; margin-top: 10px; color: #c0392b;">После 25.04.2026 будут сформированы приказы о допуске к диплому. Если есть долги – отчисление из института.</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Диплом -->
+                <div class="dash-card card-diploma" onclick="switchView('view-diploma')">
+                    <i class="fas fa-user-graduate card-icon"></i>
+                    <div class="card-title">Диплом (ВКР)</div>
+                </div>
+
+                <!-- Практика -->
+                <div class="dash-card card-practice" onclick="switchView('view-practice')">
+                    <i class="fas fa-briefcase card-icon"></i>
+                    <div class="card-title">Практика</div>
+                </div>
+
+                <!-- Лекции -->
+                <div class="dash-card card-lectures" onclick="switchView('view-lectures')">
+                    <i class="fas fa-folder-open card-icon"></i>
+                    <div class="card-title">Записи всех лекций (Я.Диск)</div>
+                </div>
+
+                <!-- Предметы -->
+                <div class="dash-card card-subjects" onclick="switchView('view-subjects')">
+                    <i class="fas fa-book card-icon"></i>
+                    <div class="card-title">Предметы за 5 курс</div>
                 </div>
             </div>
-            <div class="card-content expanded">
-                <div class="card-inner">
+        </div>
+
+        <!-- ================= СТРАНИЦА: ДИПЛОМ ================= -->
+        <div id="view-diploma" class="page-view">
+            <div class="view-header">
+                <button class="back-btn" onclick="switchView('dashboard-view')"><i class="fas fa-arrow-left"></i> Назад</button>
+                <h2 class="view-title" style="color: var(--color-diploma);"><i class="fas fa-user-graduate"></i> Дипломная работа (ВКР)</h2>
+            </div>
+
+            <!-- Блок: Экономическая часть -->
+            <div class="subject-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div>
+                        <div class="subject-name">Экономическая часть</div>
+                        <div class="instructor">Преподаватель: Селина Ольга Викторовна</div>
+                    </div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-inner">
+                        <ul class="task-list">
+                            <li>
+                                <span class="task-number">1</span>
+                                <div class="task-content">
+                                    <strong>Организационная информация:</strong><br>
+                                    Курс в BB: <em>2025_Дипломные работы или проекты_Селина Ольга Викторовна</em><br>
+                                    Срок сдачи: <strong>10 мая 2026г.</strong><br>
+                                    Название документа: <strong>Фамилия И.О., группа (раздел Экономика ВКР)</strong><br>
+                                    <span style="color: #e74c3c; font-weight: bold; margin-top: 5px; display: inline-block;">Необходимо обязательно зарегистрироваться в гр. ИТ-511(З)!</span>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="task-number">2</span>
+                                <div class="task-content">
+                                    <strong>Содержание раздела "Экономика" ВКР (Объём 7-15 страниц):</strong>
+                                    
+                                    <div style="margin-top: 15px; padding-left: 15px; border-left: 3px solid var(--accent-color);">
+                                        
+                                        <div style="margin-bottom: 12px;">
+                                            <strong>Введение</strong>
+                                        </div>
+                                        
+                                        <div style="margin-bottom: 12px;">
+                                            <strong>1.1 Теоретические аспекты оценки эффективности реализации предлагаемых мероприятий</strong>
+                                            <div style="margin-top: 4px; font-size: 0.95rem;">ОБЯЗАТЕЛЬНО должны быть сравнительные таблицы подходов российских и зарубежных учёных к становлению и развитию понятий и направлений по данному вопросу и структурно-логические схемы.</div>
+                                        </div>
+                                        
+                                        <div style="margin-bottom: 12px;">
+                                            <strong>1.2 Перспективы стратегического развития предприятия</strong> (при наличии объекта исследования – предприятия, по которому пишете диплом)
+                                            <div style="margin-top: 4px; font-size: 0.95rem;">Мировые (российские или отраслевые) тренды и тенденции развития вашего вопроса: история развития предприятия, Step-анализ, Swot-анализ, анализ финансовой отчётности предприятий, оценка КПД в аспекте ССП.</div>
+                                        </div>
+                                        
+                                        <div style="margin-bottom: 12px;">
+                                            <strong>1.3 Оценка затрат на реализацию предлагаемых мероприятий</strong>
+                                            <div style="margin-top: 4px; font-size: 0.95rem;">Необходимо рассчитать затраты на внедрение предложенных мероприятий: заработная плата, отчисления на соц. нужды, материальные затраты, амортизационные отчисления, прочие расходы.</div>
+                                        </div>
+                                        
+                                        <div style="margin-bottom: 12px;">
+                                            <strong>1.4 Оценка эффективности (эффекта) разработанных к внедрению мероприятий</strong>
+                                            <div style="margin-top: 4px; font-size: 0.95rem;">Необходимо рассчитать эффект от реализации мероприятий и по возможности рассчитать показатели эффективности.</div>
+                                        </div>
+                                        
+                                        <div style="margin-bottom: 12px;">
+                                            <strong>Заключение</strong>
+                                        </div>
+                                        
+                                        <div>
+                                            <strong>Список используемых источников</strong>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        
+                        <div class="lectures-section">
+                            <div class="lectures-title">
+                                <i class="fas fa-video"></i> Лекция
+                            </div>
+                            <div class="links">
+                                <!-- Заглушка для ссылки -->
+                                <a href="#" class="link-btn video" target="_blank"><i class="fas fa-video"></i> Лекция по Экономике (скоро)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок: БЖД -->
+            <div class="subject-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div>
+                        <div class="subject-name">Безопасность жизнедеятельности (БЖД)</div>
+                        <div class="instructor">Преподаватель: Яценко Александр Сергеевич</div>
+                    </div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-inner">
+                        <ul class="task-list">
+                            <li>
+                                <span class="task-number">1</span>
+                                <div class="task-content">
+                                    <strong>Организационная информация:</strong><br>
+                                    Курс в BB: <em>2025_Дипломные работы или проекты_Яценко Александр Сергеевич</em>
+                                </div>
+                            </li>
+                        </ul>
+                        
+                        <p style="opacity: 0.8; margin-top: 15px; margin-bottom: 15px;">Описание требований для раздела БЖД появится немного позже.</p>
+                        
+                        <div class="lectures-section">
+                            <div class="lectures-title">
+                                <i class="fas fa-video"></i> Лекция
+                            </div>
+                            <div class="links">
+                                <!-- Заглушка для ссылки -->
+                                <a href="#" class="link-btn video" target="_blank"><i class="fas fa-video"></i> Лекция по БЖД (скоро)</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card">
+                <!-- ТАЙМЛАЙН ГИА -->
+                <div class="timeline-container">
+                    <h3 style="color: var(--accent-color); margin-bottom: 5px;"><i class="fas fa-calendar-alt"></i> График выполнения ВКР (Регламент ГИА)</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">Не позднее 25.03.2026</div>
+                            <div class="timeline-content">Выдача задания на ВКР и преддипломную практику руководителем (консультантом).</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">30.03.2026 — 25.04.2026</div>
+                            <div class="timeline-content">Преддипломная практика (Приказ о прохождении). Госэкзамена <strong>нет</strong>.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Не позднее 26.06.2026</div>
+                            <div class="timeline-content">Выдача задания на спецраздел (экономика, БЖД).</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Не позднее 06.07.2026</div>
+                            <div class="timeline-content">Проверка спецраздела (Подпись на титульном листе и листе заданий на спецраздел).</div>
+                        </div>
+                        <div class="timeline-item vacation">
+                            <div class="timeline-date">с 06.07.2026 по 01.09.2026</div>
+                            <div class="timeline-content"><strong>КАНИКУЛЫ!</strong> Руководители и консультанты тоже в отпуске!</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Не позднее 05.09.2026</div>
+                            <div class="timeline-content">Проверка ВКР руководителем (Подпись на титул. листе, листе задания на ВКР и в реферате).</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Не позднее 06.09.2026</div>
+                            <div class="timeline-content">Проверка ВКР на антиплагиат (Справка о прохождении проверки).</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Не позднее 10.09.2026</div>
+                            <div class="timeline-content">Нормоконтроль (Подпись на титульном листе и в реферате).</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Не позднее 12.09.2026</div>
+                            <div class="timeline-content">Отзыв руководителя ВКР.</div>
+                        </div>
+                        <div class="timeline-item important">
+                            <div class="timeline-date">Не позднее 14.09.2026</div>
+                            <div class="timeline-content"><strong>Утверждение ВКР заведующим кафедрой</strong> (Подпись на титульном листе, листах заданий и в реферате).</div>
+                        </div>
+                        <div class="timeline-item important">
+                            <div class="timeline-date">с 24.09.2026</div>
+                            <div class="timeline-content"><strong>Защита ВКР</strong> (Оценка за защиту).</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">Не позднее 3-х дней после защиты</div>
+                            <div class="timeline-content">Сдача на кафедру компакт-диска с ВКР (Подпись в обходном листе).</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= СТРАНИЦА: ПРАКТИКА ================= -->
+        <div id="view-practice" class="page-view">
+            <div class="view-header">
+                <button class="back-btn" onclick="switchView('dashboard-view')"><i class="fas fa-arrow-left"></i> Назад</button>
+                <h2 class="view-title" style="color: var(--color-practice);"><i class="fas fa-briefcase"></i> Производственная практика (преддипломная)</h2>
+            </div>
+            
+            <div class="content-card">
+                <div class="warning-box">
+                    <strong>Даты прохождения практики:</strong> 30.03.2026 - 25.04.2026.<br>
+                    После 25.04.2026 будут сформированы приказы о допуске к диплому. <strong>Если есть долги – отчисление из института.</strong>
+                </div>
+
+                <ul class="task-list">
+                    <li>
+                        <span class="task-number">1</span>
+                        <div class="task-content">
+                            <strong>Информация о практике:</strong><br>
+                            Практику можно проходить в институте (как и в прошлые разы).<br>
+                            Практика называется: <em>Производственная практика (преддипломная практика)</em>.<br>
+                            Руководитель практики = Руководитель ВКР.
+                        </div>
+                    </li>
+                    <li>
+                        <span class="task-number">2</span>
+                        <div class="task-content">
+                            <strong>Отчёт:</strong> В отчёте будет 1-я глава ВКР (анализ предметной области). Шаблон отчёта есть в BB (и по ссылке ниже).
+                        </div>
+                    </li>
+                    <li>
+                        <span class="task-number">3</span>
+                        <div class="task-content">
+                            <strong>Документы:</strong> Заполнить «ЭСАК» и «Лист журнала инструктажа» (как и раньше).
+                        </div>
+                    </li>
+                    <li>
+                        <span class="task-number">4</span>
+                        <div class="task-content">
+                            <strong>Куда грузить?</strong><br>
+                            Заходим в BB, раздел «Контроль знаний студентов», находим папку «Преддипломная практика».
+                            <div class="guide-box">
+                                <ul style="list-style: none;">
+                                    <li style="margin-bottom: 5px;"><i class="fas fa-arrow-right" style="color: var(--color-practice);"></i> «ЭСАК» загружаем в <strong>«Док-ты по практике»</strong></li>
+                                    <li style="margin-bottom: 5px;"><i class="fas fa-arrow-right" style="color: var(--color-practice);"></i> «Лист журнала инструктажа» в <strong>«Инструктаж по ОТ и ТБ»</strong></li>
+                                    <li><i class="fas fa-arrow-right" style="color: var(--color-practice);"></i> «Отчёт» в <strong>«Отчет по преддипломной практике»</strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="lectures-section">
+                    <div class="lectures-title">
+                        <i class="fas fa-link"></i> Материалы для практики
+                    </div>
                     <div class="links">
-                        <a href="https://disk.yandex.ru/d/repRcv4oihIgwA" class="link-btn" target="_blank">
-                            <i class="fas fa-external-link-alt"></i> Открыть все лекции
-                        </a>
+                        <a href="https://disk.yandex.ru/i/Id__MvQ1MAIIAQ" class="link-btn video" target="_blank"><i class="fas fa-video"></i> Лекция по практике</a>
+                        <a href="https://disk.yandex.ru/i/BXdjcTaSF3sPsg" class="link-btn excel" target="_blank"><i class="fas fa-file-excel"></i> ЭСАК</a>
+                        <a href="https://disk.yandex.ru/i/lrrjC4ONU4_7EA" class="link-btn pdf" target="_blank"><i class="fas fa-file-pdf"></i> Лист журнала инструктажа</a>
+                        <a href="https://disk.yandex.ru/i/zxASux6oIFgxkQ" class="link-btn word" target="_blank"><i class="fas fa-file-word"></i> Шаблон отчёта</a>
                     </div>
+                    <p style="margin-top: 15px; font-size: 0.85rem; opacity: 0.8; font-style: italic;">
+                        Все файлы, которые можно здесь обнаружить, редактировались, дополнялись и корректировались мной. Нетронутые точно такие же файлы можно найти в BB.
+                    </p>
                 </div>
             </div>
         </div>
 
-        <!-- ВАЖНОЕ ПРЕДУПРЕЖДЕНИЕ О ДОЛГАХ -->
-        <div class="debts-alert">
-            <h3 style="color: #c0392b; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-exclamation-triangle"></i> ВНИМАНИЕ: СРОКИ СДАЧИ ДОЛГОВ
-            </h3>
-            <p style="margin-bottom: 10px;">Все долги необходимо сдать до конца следующей сессии, то есть до <strong>6-го февраля (пятница)</strong> без комиссионной пересдачи.</p>
-            <p style="margin-bottom: 10px;">А дальше до <strong>25.04.2026</strong>, но с комиссией.</p>
-            <p style="font-weight: 700; color: #c0392b;">После 25.04.2026 будут сформированы приказы о допуске к диплому. Если есть долги – отчисление из института.</p>
-        </div>
-
-        <div class="subject-card">
-            <div class="card-header" onclick="toggleCard(this)">
-                <div class="card-title">
-                    <div class="subject-name">Экономические аспекты профессиональной деятельности</div>
-                    <div class="instructor">Преподаватель: Селина Ольга Викторовна</div>
-                </div>
-                <div class="deadline">Крайний срок: 25.01.2026</div>
-                <div class="toggle-icon">
-                    <i class="fas fa-chevron-down"></i>
-                </div>
+        <!-- ================= СТРАНИЦА: ЛЕКЦИИ ================= -->
+        <div id="view-lectures" class="page-view">
+            <div class="view-header">
+                <button class="back-btn" onclick="switchView('dashboard-view')"><i class="fas fa-arrow-left"></i> Назад</button>
+                <h2 class="view-title" style="color: var(--color-lectures);"><i class="fas fa-folder-open"></i> Записи всех лекций</h2>
             </div>
-            <div class="card-content">
-                <div class="card-inner">
-                    <ul class="task-list">
-                        <li>
-                            <span class="task-number">0</span>
-                            <div class="task-content">Проверить, что зачислены в группу в Blackboard (BB).</div>
-                        </li>
-                        <li>
-                            <span class="task-number">1</span>
-                            <div class="task-content">Пройти все тесты в BB.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">2</span>
-                            <div class="task-content">Написать эссе на тему «Экономические аспекты профессиональной деятельности». Файл назвать: <strong>Фамилия И.О., группа ИТ-511(З), Эссе (ЭАПД)</strong>.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">3</span>
-                            <div class="task-content">
-                                "Зелёные" инвестиции. Необходимо посмотреть ролик и ответить на контрольные вопросы (не на все, список контрольных вопросов будет ниже) письменно в тетради, скан загрузить в BB. Каждая страница в тетради должна быть подписана: Фамилия И.О., группа ИТ-511(З). Файл назвать: <strong>Фамилия И.О., группа ИТ-511(З)</strong>.
-                                <div class="links">
-                                    <a href="http://www.rzdtv.ru/2020/02/05/privlechenie-deneg" class="link-btn" target="_blank">
-                                        <i class="fas fa-external-link-alt"></i> Видео по теме
-                                    </a>
-                                </div>
-                                <p style="margin-top: 10px; font-size: 0.9rem;"><strong>Вопросы:</strong> 1. Что такое «зелёные» еврооблигации ОАО «РЖД»? 2. Кто подтверждает требование по «зелёности»? 3. В какой стране наибольшая доля грузоперевозок приходится на автотранспорт? 4. Что произошло в результате перепродажи вагонного парка ОАО «РЖД» в частные руки? 5. Какой аукцион состоялся в ноябре 2019 г.?</p>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="task-number">4</span>
-                            <div class="task-content">
-                                Задачи Excel. Попросить у кого-нибудь из одногруппников файл с задачами Excel (самостоятельно это не сделать, если вас не было на паре). У вас будет 4 готовых задачи, их мы не трогаем, а 5-я по своему варианту. Откуда брать вариант? Из файла 
-                                <a href="https://disk.yandex.ru/i/hpMp5o_Gl4sxag" class="file-link" target="_blank">«Тема 5. Оценка экономической эффективности инвестиционных проектов.pdf»</a>, который лежит в BB в разделе «Методические разработки к практическим занятиям». Как только откроете файл, перейдите на страницу 18, вы должны увидеть блок «ПРАКТИЧЕСКИЕ ЗАДАНИЯ». Вот отсюда мы берём вариант. Как узнать какой вариант у вас? По файлу списка группы, который можно найти по ссылке ниже.
-                                <div class="links">
-                                    <a href="https://docs.google.com/document/d/1KSlj4e9AXMmpChZZ45Z6ZvviRbGZGlmzVaHo73wfcEw" class="link-btn" target="_blank">
-                                        <i class="fas fa-external-link-alt"></i> Список группы для варианта
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="task-number">5</span>
-                            <div class="task-content">
-                                Итоговая работа. Самая объёмная и сложная работа. Но самое печальное, что попытка сдать работу всего одна, так как преподаватель уйдёт в отпуск с 18-го декабря, соответственно, работы она проверять не будет до января, а значит исправить работу, если с ней что-то будет не так, не получится. Преподаватель сказала, что работа должна быть идеальна сразу. Всё, что нужно сделать указано в разделе «Контроль знаний студентов». Остальное можно найти в лекциях по этому предмету. Файл назвать: <strong>Фамилия И.О., группа ИТ-511(З), ИР (ЭАПД)</strong>.
-                            </div>
-                        </li>
-                    </ul>
-                    
-                    <div class="lectures-section">
-                        <div class="lectures-title">
-                            <i class="fas fa-video"></i> Лекции по предмету
-                        </div>
-                        <div class="links">
-                            <a href="https://disk.yandex.ru/i/o5Cw5qPM1dbMFg" class="link-btn" target="_blank">
-                                <i class="fas fa-calendar-day"></i> 02.12.2025
-                            </a>
-                            <a href="https://disk.yandex.ru/i/ReDYPdAn9T_h3g" class="link-btn" target="_blank">
-                                <i class="fas fa-calendar-day"></i> 09.12.2025
-                            </a>
-                            <a href="https://disk.yandex.ru/i/mjGSL_UKhQJnbA" class="link-btn" target="_blank">
-                                <i class="fas fa-calendar-day"></i> 10.12.2025
-                            </a>
-                            <a href="https://disk.yandex.ru/i/vyUG9JgQtVI5dg" class="link-btn" target="_blank">
-                                <i class="fas fa-calendar-day"></i> 12.12.2025
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="total">
-                        Итого: 4 работы + все тесты в BB.
-                    </div>
-                </div>
+            
+            <div class="content-card" style="text-align: center; padding: 40px 20px;">
+                <p style="font-size: 1.1rem; margin-bottom: 25px;">Все записи лекций, которые проходили дистанционно, находятся здесь.</p>
+                <a href="https://disk.yandex.ru/d/repRcv4oihIgwA" class="main-lectures-btn" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> Открыть все лекции на Яндекс.Диске
+                </a>
             </div>
         </div>
 
-        <div class="subject-card">
-            <div class="card-header" onclick="toggleCard(this)">
-                <div class="card-title">
-                    <div class="subject-name">Эксплуатация инфокоммуникационных систем</div>
-                    <div class="instructor">Преподаватель: Максимова Инна Николаевна</div>
-                </div>
-                <div class="deadline">Крайний срок: 28.01.2026</div>
-                <div class="toggle-icon">
-                    <i class="fas fa-chevron-down"></i>
-                </div>
+        <!-- ================= СТРАНИЦА: ПРЕДМЕТЫ ================= -->
+        <div id="view-subjects" class="page-view">
+            <div class="view-header">
+                <button class="back-btn" onclick="switchView('dashboard-view')"><i class="fas fa-arrow-left"></i> Назад</button>
+                <h2 class="view-title" style="color: var(--color-subjects);"><i class="fas fa-book"></i> Предметы за 5 курс</h2>
+                <button class="expand-all-btn" id="expandAllBtn"><i class="fas fa-expand-alt"></i> Развернуть все</button>
             </div>
-            <div class="card-content">
-                <div class="card-inner">
-                    <ul class="task-list">
-                        <li>
-                            <span class="task-number">0</span>
-                            <div class="task-content">Проверить, что зачислены в группу в BB.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">1</span>
-                            <div class="task-content">Пройти «Итоговый тест ЗО» в BB.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">2</span>
-                            <div class="task-content">
-                                <strong>Сделать 4 лабораторных работы (отвечать в конце на контрольные вопросы, которые есть в каждой лабе, не нужно)</strong>:
-                                <ul style="margin-left: 20px; margin-top: 8px;">
-                                    <li>ЛР №1 - у всех одинаковая. Нужно выполнить все пункты, которые идут под «Общая постановка задачи», кроме 8-го пункта.</li>
-                                    <li>ЛР №2 - по вариантам. Чтобы узнать вариант, нужно скачать файл «Варианты, лекции (номера слайдов)», который находится в разделе «Контроль знаний студентов» в папке «ЗО». Номер варианта = «Задание …» из файла «Лабораторная работа 2.pdf». Например, Вариант 9 из файла «Варианты, лекции (номера слайдов)» — это «Задание 9. Сравнительный анализ информационных систем «Торрент-трекер»». И так, мы узнали наш вариант / задание, что делать дальше? А дальше нам нужно выполнить все пункты, которые описаны после «В процессе выполнения лабораторной работы необходимо:» на странице 9. Нужны только первые 7 пунктов, 8 не нужен, его не делаем.</li>
-                                    <li>ЛР №3 - Задание написано под «Задания к лабораторной работе», только нужно будет выбрать простую документацию, где не 100+ страниц, а поменьше, например, на наушники, клавиатуру, колонки и т.д., а дальше делать по пунктам из «Задания к лабораторной работе». Вам нужно будет указать ссылку на документацию или прикрепить её вместе с вашей лабораторной работой.</li>
-                                    <li>ЛР №4 - Здесь задание написано под «Практическое задание» и «Содержание отчета». Единственное, нужно выбирать не «карандаш, стол, чашка, клавиатура, сумка и др.», как указано в 1-м пункте, а объект, относящийся к информационным системам, но не программное обеспечение. Я в своей работе взял роутер.</li>
-                                </ul>
-                                <div class="links" style="margin-top: 10px;">
-                                    <a href="https://disk.yandex.ru/i/uqHEIyW9VfTWXA" class="link-btn file" target="_blank">
-                                        <i class="fas fa-file-word"></i> Варианты, лекции (номера слайдов) для ЛР №2
-                                    </a>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="task-number">3</span>
-                            <div class="task-content">
-                                <strong>Практическая работа №1</strong>. Нажмите на «Как делать Практическую». Преподаватель подробно объясняет, что и как делать.
-                            </div>
-                        </li>
-                    </ul>
-                    
-                    <div class="lectures-section">
-                        <div class="lectures-title">
-                            <i class="fas fa-video"></i> Лекции по предмету
-                        </div>
-                        <div class="links">
-                            <a href="https://disk.yandex.ru/i/DX9RljyICcWGCw" class="link-btn" target="_blank">
-                                <i class="fas fa-calendar-day"></i> 01.12.2025
-                            </a>
-                            <a href="https://disk.yandex.ru/i/jaJdX66vHF5DzA" class="link-btn" target="_blank">
-                                <i class="fas fa-question-circle"></i> Как делать Практическую
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="total">
-                        Итого: 4 лабы, 1 практическая + тест в BB.
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="subject-card">
-            <div class="card-header" onclick="toggleCard(this)">
-                <div class="card-title">
-                    <div class="subject-name">Методы и средства проектирования ИС и технологий</div>
-                    <div class="instructor">Преподаватель: Богданова Елена Сергеевна</div>
-                </div>
-                <div class="deadline">Крайний срок: 25.01.2026</div>
-                <div class="toggle-icon">
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-inner">
-                    <!-- Добавлено предупреждение для Богдановой -->
-                    <div class="practice-warning" style="margin-top: 0; margin-bottom: 20px;">
-                        <strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> КУРСАЧ НЕОБХОДИМО РАСПЕЧАТАТЬ И ПРИНЕСТИ НА ЭКЗАМЕН!
+            <!-- Предмет 1 -->
+            <div class="subject-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div>
+                        <div class="subject-name">Экономические аспекты профессиональной деятельности</div>
+                        <div class="instructor">Преподаватель: Селина Ольга Викторовна</div>
                     </div>
-
-                    <ul class="task-list">
-                        <li>
-                            <span class="task-number">0</span>
-                            <div class="task-content">Проверить, что зачислены в группу в BB.</div>
-                        </li>
-                        <li>
-                            <span class="task-number">1</span>
-                            <div class="task-content">Нужно сделать все задания, что есть в разделе «Контроль знаний студентов». В «ИТОГ» ничего не заливаем, там преподаватель поставит оценку за курс. Делайте тупо по примерам, которые есть в разделе «Методические разработки к практическим и лабораторным занятиям». Курсовая работа состоит из отдельных заданий, таких как анализ предметной области, формирование требований и т.д. Главы в том же порядке, что и отдельные работы, то есть сверху вниз. Как только сделаете все работы по отдельности, и преподаватель у вас их проверит, вы должны будете все файлы объединить в один курсач и загрузить в BB до начала сессии.</div>
-                        </li>
-                    </ul>
-                    
-                    <div class="lectures-section">
-                        <div class="lectures-title">
-                            <i class="fas fa-video"></i> Лекции по предмету
-                        </div>
-                        <div class="links">
-                            <a href="https://disk.yandex.ru/i/nL9-nYd-qjIdZg" class="link-btn" target="_blank">
-                                <i class="fas fa-calendar-day"></i> 05.12.2025
-                            </a>
-                            <a href="https://disk.yandex.ru/i/th5q2ydHLAHhTw" class="link-btn" target="_blank">
-                                <i class="fas fa-calendar-day"></i> 12.12.2025
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <div class="total">
-                        Итого: 5 работ (курсач)
-                    </div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
                 </div>
-            </div>
-        </div>
-
-        <div class="subject-card">
-            <div class="card-header" onclick="toggleCard(this)">
-                <div class="card-title">
-                    <div class="subject-name">Дипломные работы или проекты кафедра АТиС на ж.д. тр-те</div>
-                </div>
-                <div class="deadline">Крайний срок ВКР: 15.01.2026</div>
-                <div class="toggle-icon">
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-            </div>
-            <div class="card-content">
-                <div class="card-inner">
-                    
-                    <!-- ПОДКАРТОЧКА 1: ВКР -->
-                    <div class="sub-card">
-                        <div class="sub-card-header" onclick="toggleSubCard(this)">
-                            <div class="sub-card-title">
-                                <i class="fas fa-graduation-cap"></i> ВКР, Диплом
-                            </div>
-                            <div class="toggle-icon">
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                        </div>
-                        <div class="sub-card-content">
-                            <div class="sub-card-inner">
-                                <div class="diploma-important">
-                                    <strong>Важно:</strong> Оригинал заявления сдать в Б3-17 с 10:00 до 14:00 до 15 января.
-                                </div>
-                                
-                                <ul class="task-list">
-                                    <li>
-                                        <span class="task-number">0</span>
-                                        <div class="task-content">Проверить, что зачислены в группу в BB.</div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">1</span>
-                                        <div class="task-content">Определиться с темой ВКР (диплома).</div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">2</span>
-                                        <div class="task-content">Выбрать научного руководителя диплома.</div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">3</span>
-                                        <div class="task-content">Написать преподу о желании писать диплом под его началом.</div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">4</span>
-                                        <div class="task-content">Вместе с преподавателем выбрать тему диплома (можно свою, а можно из файла "Примерный список тем ВКР").</div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">5</span>
-                                        <div class="task-content">Написать Русаковой, что выбрал преподавателя и тему на диплом.</div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">6</span>
-                                        <div class="task-content">Заполнить заявление в печатном виде, распечатать, подписать, отсканировать, отправить преподавателю для подписи, затем прикрепить в BB.</div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">7</span>
-                                        <div class="task-content">Принести до 15 января оригинал заявления и сдать его в Б3-17 с 10:00 до 14:00.</div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">8</span>
-                                        <div class="task-content">Расписаться в протоколе собрания в том же кабинете.</div>
-                                    </li>
-                                </ul>
-                                
-                                <div class="lectures-section">
-                                    <div class="lectures-title">
-                                        <i class="fas fa-video"></i> Материалы по ВКР
+                <div class="card-content">
+                    <div class="card-inner">
+                        <ul class="task-list">
+                            <li>
+                                <span class="task-number">0</span>
+                                <div class="task-content">Проверить, что зачислены в группу в Blackboard (BB).</div>
+                            </li>
+                            <li>
+                                <span class="task-number">1</span>
+                                <div class="task-content">Пройти все тесты в BB.</div>
+                            </li>
+                            <li>
+                                <span class="task-number">2</span>
+                                <div class="task-content">Написать эссе на тему «Экономические аспекты профессиональной деятельности». Файл назвать: <strong>Фамилия И.О., группа ИТ-511(З), Эссе (ЭАПД)</strong>.</div>
+                            </li>
+                            <li>
+                                <span class="task-number">3</span>
+                                <div class="task-content">
+                                    "Зелёные" инвестиции. Необходимо посмотреть ролик и ответить на контрольные вопросы (не на все, список контрольных вопросов будет ниже) письменно в тетради, скан загрузить в BB. Каждая страница в тетради должна быть подписана: Фамилия И.О., группа ИТ-511(З). Файл назвать: <strong>Фамилия И.О., группа ИТ-511(З)</strong>.
+                                    <div class="links" style="margin-top: 10px; margin-bottom: 10px;">
+                                        <a href="http://www.rzdtv.ru/2020/02/05/privlechenie-deneg" class="link-btn video" target="_blank">
+                                            <i class="fas fa-video"></i> Видео по теме
+                                        </a>
                                     </div>
-                                    <div class="links">
-                                        <a href="https://disk.yandex.ru/i/Jqq4MHX25qWJkA" class="link-btn" target="_blank">
-                                            <i class="fas fa-graduation-cap"></i> Лекция по ВКР
-                                        </a>
-                                        <a href="https://disk.yandex.ru/i/Sr18EeiYLHtqfg" class="link-btn" target="_blank">
-                                            <i class="fas fa-users"></i> Таблица с преподавателями
-                                        </a>
-                                        <a href="https://disk.yandex.ru/i/oN2CArZY5ogM7A" class="link-btn" target="_blank">
-                                            <i class="fas fa-file-pdf"></i> Примерный список тем ВКР
-                                        </a>
-                                        <a href="https://disk.yandex.ru/i/xTWWN_4erulNug" class="link-btn" target="_blank">
-                                            <i class="fas fa-file-word"></i> Шаблон заявления на ВКР
+                                    <p style="font-size: 0.9rem;"><strong>Вопросы:</strong> 1. Что такое «зелёные» еврооблигации ОАО «РЖД»? 2. Кто подтверждает требование по «зелёности»? 3. В какой стране наибольшая доля грузоперевозок приходится на автотранспорт? 4. Что произошло в результате перепродажи вагонного парка ОАО «РЖД» в частные руки? 5. Какой аукцион состоялся в ноябре 2019 г.?</p>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="task-number">4</span>
+                                <div class="task-content">
+                                    Задачи Excel. Попросить у кого-нибудь из одногруппников файл с задачами Excel (самостоятельно это не сделать, если вас не было на паре). У вас будет 4 готовых задачи, их мы не трогаем, а 5-я по своему варианту. Откуда брать вариант? Из файла 
+                                    <a href="https://disk.yandex.ru/i/hpMp5o_Gl4sxag" class="file-link" target="_blank">«Тема 5. Оценка экономической эффективности инвестиционных проектов.pdf»</a>, который лежит в BB в разделе «Методические разработки к практическим занятиям». Как только откроете файл, перейдите на страницу 18, вы должны увидеть блок «ПРАКТИЧЕСКИЕ ЗАДАНИЯ». Вот отсюда мы берём вариант. Как узнать какой вариант у вас? По файлу списка группы, который можно найти по ссылке ниже.
+                                    <div class="links" style="margin-top: 10px;">
+                                        <a href="https://docs.google.com/document/d/1KSlj4e9AXMmpChZZ45Z6ZvviRbGZGlmzVaHo73wfcEw" class="link-btn folder" target="_blank">
+                                            <i class="fas fa-external-link-alt"></i> Список группы для варианта
                                         </a>
                                     </div>
                                 </div>
+                            </li>
+                            <li>
+                                <span class="task-number">5</span>
+                                <div class="task-content">
+                                    Итоговая работа. Самая объёмная и сложная работа. Но самое печальное, что попытка сдать работу всего одна, так как преподаватель уйдёт в отпуск с 18-го декабря, соответственно, работы она проверять не будет до января, а значит исправить работу, если с ней что-то будет не так, не получится. Преподаватель сказала, что работа должна быть идеальна сразу. Всё, что нужно сделать указано в разделе «Контроль знаний студентов». Остальное можно найти в лекциях по этому предмету. Файл назвать: <strong>Фамилия И.О., группа ИТ-511(З), ИР (ЭАПД)</strong>.
+                                </div>
+                            </li>
+                        </ul>
+                        
+                        <div class="lectures-section">
+                            <div class="lectures-title">
+                                <i class="fas fa-video"></i> Лекции по предмету
                             </div>
+                            <div class="links">
+                                <a href="https://disk.yandex.ru/i/o5Cw5qPM1dbMFg" class="link-btn video" target="_blank"><i class="fas fa-calendar-day"></i> 02.12.2025</a>
+                                <a href="https://disk.yandex.ru/i/ReDYPdAn9T_h3g" class="link-btn video" target="_blank"><i class="fas fa-calendar-day"></i> 09.12.2025</a>
+                                <a href="https://disk.yandex.ru/i/mjGSL_UKhQJnbA" class="link-btn video" target="_blank"><i class="fas fa-calendar-day"></i> 10.12.2025</a>
+                                <a href="https://disk.yandex.ru/i/vyUG9JgQtVI5dg" class="link-btn video" target="_blank"><i class="fas fa-calendar-day"></i> 12.12.2025</a>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 15px; padding: 12px; background-color: rgba(0,0,0,0.05); border-radius: 5px; font-weight: 500;">
+                            Итого: 4 работы + все тесты в BB.
                         </div>
                     </div>
-
-                    <!-- ПОДКАРТОЧКА 2: ПРАКТИКА -->
-                    <div class="sub-card">
-                        <div class="sub-card-header" onclick="toggleSubCard(this)">
-                            <div class="sub-card-title">
-                                <i class="fas fa-briefcase"></i> Производственная практика (преддипломная практика)
-                            </div>
-                            <div class="toggle-icon">
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                        </div>
-                        <div class="sub-card-content">
-                            <div class="sub-card-inner">
-                                <div class="practice-warning">
-                                    <strong><i class="fas fa-exclamation-triangle"></i> Даты прохождения практики:</strong> 30.03.2026 - 25.04.2026.<br>
-                                    После 25.04.2026 будут сформированы приказы о допуске к диплому. <strong>Если есть долги – отчисление из института.</strong>
-                                </div>
-
-                                <ul class="task-list">
-                                    <li>
-                                        <span class="task-number">1</span>
-                                        <div class="task-content">
-                                            <strong>Информация о практике:</strong><br>
-                                            Практику можно проходить в институте (как и в прошлые разы).<br>
-                                            Практика называется: <em>Производственная практика (преддипломная практика)</em>.<br>
-                                            Руководитель практики = Руководитель ВКР.
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">2</span>
-                                        <div class="task-content">
-                                            <strong>Отчёт:</strong> В отчёте будет 1-я глава ВКР (анализ предметной области). Шаблон отчёта есть в BB (и по ссылке ниже).
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">3</span>
-                                        <div class="task-content">
-                                            <strong>Документы:</strong> Заполнить «ЭСАК» и «Лист журнала инструктажа» (как и раньше).
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <span class="task-number">4</span>
-                                        <div class="task-content">
-                                            <strong>Куда грузить?</strong><br>
-                                            Заходим в BB, раздел «Контроль знаний студентов», находим папку «Преддипломная практика».
-                                            <div class="guide-box">
-                                                <ul style="list-style: none;">
-                                                    <li><i class="fas fa-arrow-right" style="color: var(--accent-color);"></i> «ЭСАК» загружаем в <strong>«Док-ты по практике»</strong></li>
-                                                    <li><i class="fas fa-arrow-right" style="color: var(--accent-color);"></i> «Лист журнала инструктажа» в <strong>«Инструктаж по ОТ и ТБ»</strong></li>
-                                                    <li><i class="fas fa-arrow-right" style="color: var(--accent-color);"></i> «Отчёт» в <strong>«Отчет по преддипломной практике»</strong></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-
-                                <div class="lectures-section">
-                                    <div class="lectures-title">
-                                        <i class="fas fa-link"></i> Материалы для практики
-                                    </div>
-                                    <div class="links">
-                                        <a href="https://disk.yandex.ru/i/Id__MvQ1MAIIAQ" class="link-btn" target="_blank">
-                                            <i class="fas fa-video"></i> Лекция по практике
-                                        </a>
-                                        <a href="https://disk.yandex.ru/i/BXdjcTaSF3sPsg" class="link-btn file" target="_blank">
-                                            <i class="fas fa-file-excel"></i> ЭСАК
-                                        </a>
-                                        <a href="https://disk.yandex.ru/i/lrrjC4ONU4_7EA" class="link-btn file" target="_blank">
-                                            <i class="fas fa-file-pdf"></i> Лист журнала инструктажа
-                                        </a>
-                                        <a href="https://disk.yandex.ru/i/zxASux6oIFgxkQ" class="link-btn file" target="_blank">
-                                            <i class="fas fa-file-word"></i> Шаблон отчёта
-                                        </a>
-                                    </div>
-                                    <p style="margin-top: 15px; font-size: 0.85rem; opacity: 0.8; font-style: italic;">
-                                        Все файлы, которые можно здесь обнаружить, редактировались, дополнялись и корректировались мной. Нетронутые точно такие же файлы можно найти в BB.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
                 </div>
             </div>
+
+            <!-- Предмет 2 -->
+            <div class="subject-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div>
+                        <div class="subject-name">Эксплуатация инфокоммуникационных систем</div>
+                        <div class="instructor">Преподаватель: Максимова Инна Николаевна</div>
+                    </div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-inner">
+                        <ul class="task-list">
+                            <li>
+                                <span class="task-number">0</span>
+                                <div class="task-content">Проверить, что зачислены в группу в BB.</div>
+                            </li>
+                            <li>
+                                <span class="task-number">1</span>
+                                <div class="task-content">Пройти «Итоговый тест ЗО» в BB.</div>
+                            </li>
+                            <li>
+                                <span class="task-number">2</span>
+                                <div class="task-content">
+                                    <strong>Сделать 4 лабораторных работы (отвечать в конце на контрольные вопросы, которые есть в каждой лабе, не нужно)</strong>:
+                                    <ul style="margin-left: 20px; margin-top: 8px;">
+                                        <li style="margin-bottom: 5px;">ЛР №1 - у всех одинаковая. Нужно выполнить все пункты, которые идут под «Общая постановка задачи», кроме 8-го пункта.</li>
+                                        <li style="margin-bottom: 5px;">ЛР №2 - по вариантам. Чтобы узнать вариант, нужно скачать файл «Варианты, лекции (номера слайдов)», который находится в разделе «Контроль знаний студентов» в папке «ЗО». Номер варианта = «Задание …» из файла «Лабораторная работа 2.pdf». Например, Вариант 9 из файла «Варианты, лекции (номера слайдов)» — это «Задание 9. Сравнительный анализ информационных систем «Торрент-трекер»». И так, мы узнали наш вариант / задание, что делать дальше? А дальше нам нужно выполнить все пункты, которые описаны после «В процессе выполнения лабораторной работы необходимо:» на странице 9. Нужны только первые 7 пунктов, 8 не нужен, его не делаем.</li>
+                                        <li style="margin-bottom: 5px;">ЛР №3 - Задание написано под «Задания к лабораторной работе», только нужно будет выбрать простую документацию, где не 100+ страниц, а поменьше, например, на наушники, клавиатуру, колонки и т.д., а дальше делать по пунктам из «Задания к лабораторной работе». Вам нужно будет указать ссылку на документацию или прикрепить её вместе с вашей лабораторной работой.</li>
+                                        <li>ЛР №4 - Здесь задание написано под «Практическое задание» и «Содержание отчета». Единственное, нужно выбирать не «карандаш, стол, чашка, клавиатура, сумка и др.», как указано в 1-м пункте, а объект, относящийся к информационным системам, но не программное обеспечение. Я в своей работе взял роутер.</li>
+                                    </ul>
+                                    <div class="links" style="margin-top: 10px;">
+                                        <a href="https://disk.yandex.ru/i/uqHEIyW9VfTWXA" class="link-btn word" target="_blank">
+                                            <i class="fas fa-file-word"></i> Варианты, лекции (номера слайдов) для ЛР №2
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <span class="task-number">3</span>
+                                <div class="task-content">
+                                    <strong>Практическая работа №1</strong>. Нажмите на «Как делать Практическую». Преподаватель подробно объясняет, что и как делать.
+                                </div>
+                            </li>
+                        </ul>
+
+                        <div class="lectures-section">
+                            <div class="lectures-title">
+                                <i class="fas fa-video"></i> Лекции по предмету
+                            </div>
+                            <div class="links">
+                                <a href="https://disk.yandex.ru/i/DX9RljyICcWGCw" class="link-btn video" target="_blank"><i class="fas fa-calendar-day"></i> 01.12.2025</a>
+                                <a href="https://disk.yandex.ru/i/jaJdX66vHF5DzA" class="link-btn video" target="_blank"><i class="fas fa-question-circle"></i> Как делать Практическую</a>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 15px; padding: 12px; background-color: rgba(0,0,0,0.05); border-radius: 5px; font-weight: 500;">
+                            Итого: 4 лабы, 1 практическая + тест в BB.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Предмет 3 -->
+            <div class="subject-card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <div>
+                        <div class="subject-name">Методы и средства проектирования ИС и технологий</div>
+                        <div class="instructor">Преподаватель: Богданова Елена Сергеевна</div>
+                    </div>
+                    <i class="fas fa-chevron-down toggle-icon"></i>
+                </div>
+                <div class="card-content">
+                    <div class="card-inner">
+                        <div class="warning-box" style="margin-top: 15px;">
+                            <strong><i class="fas fa-exclamation-circle"></i> Важно:</strong> КУРСАЧ НЕОБХОДИМО РАСПЕЧАТАТЬ И ПРИНЕСТИ НА ЭКЗАМЕН!
+                        </div>
+                        <ul class="task-list">
+                            <li>
+                                <span class="task-number">0</span>
+                                <div class="task-content">Проверить, что зачислены в группу в BB.</div>
+                            </li>
+                            <li>
+                                <span class="task-number">1</span>
+                                <div class="task-content">Нужно сделать все задания, что есть в разделе «Контроль знаний студентов». В «ИТОГ» ничего не заливаем, там преподаватель поставит оценку за курс. Делайте тупо по примерам, которые есть в разделе «Методические разработки к практическим и лабораторным занятиям». Курсовая работа состоит из отдельных заданий, таких как анализ предметной области, формирование требований и т.д. Главы в том же порядке, что и отдельные работы, то есть сверху вниз. Как только сделаете все работы по отдельности, и преподаватель у вас их проверит, вы должны будете все файлы объединить в один курсач и загрузить в BB до начала сессии.</div>
+                            </li>
+                        </ul>
+
+                        <div class="lectures-section">
+                            <div class="lectures-title">
+                                <i class="fas fa-video"></i> Лекции по предмету
+                            </div>
+                            <div class="links">
+                                <a href="https://disk.yandex.ru/i/nL9-nYd-qjIdZg" class="link-btn video" target="_blank"><i class="fas fa-calendar-day"></i> 05.12.2025</a>
+                                <a href="https://disk.yandex.ru/i/th5q2ydHLAHhTw" class="link-btn video" target="_blank"><i class="fas fa-calendar-day"></i> 12.12.2025</a>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 15px; padding: 12px; background-color: rgba(0,0,0,0.05); border-radius: 5px; font-weight: 500;">
+                            Итого: 5 работ (курсач)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </main>
+
     <script>
+        // Переключение тем
         const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
         const savedTheme = localStorage.getItem('theme') || 
                           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         
@@ -907,7 +973,6 @@
         themeToggle.addEventListener('click', () => {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateThemeIcon(newTheme);
@@ -915,88 +980,56 @@
         
         function updateThemeIcon(theme) {
             if (theme === 'dark') {
-                themeIcon.className = 'fas fa-sun';
                 themeToggle.innerHTML = '<i class="fas fa-sun"></i> Светлая тема';
             } else {
-                themeIcon.className = 'fas fa-moon';
                 themeToggle.innerHTML = '<i class="fas fa-moon"></i> Тёмная тема';
             }
         }
-        
+
+        // Логика переключения страниц (Дашборд <-> Внутренняя страница)
+        function switchView(viewId) {
+            // Скрываем все виды
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            // Показываем нужный
+            document.getElementById(viewId).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Логика аккордеонов (Для предметов и разделов диплома)
         function toggleCard(header) {
-            const card = header.closest('.subject-card');
-            const content = card.querySelector('.card-content');
-            const icon = header.querySelector('.toggle-icon i');
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
             
             if (content.classList.contains('expanded')) {
                 content.classList.remove('expanded');
-                icon.className = 'fas fa-chevron-down';
+                icon.className = 'fas fa-chevron-down toggle-icon';
             } else {
                 content.classList.add('expanded');
-                icon.className = 'fas fa-chevron-up';
+                icon.className = 'fas fa-chevron-up toggle-icon';
             }
         }
-        
-        function toggleSubCard(header) {
-            const card = header.closest('.sub-card');
-            const content = card.querySelector('.sub-card-content');
-            const icon = header.querySelector('.toggle-icon i');
-            
-            if (content.classList.contains('expanded')) {
-                content.classList.remove('expanded');
-                icon.className = 'fas fa-chevron-down';
-            } else {
-                content.classList.add('expanded');
-                icon.className = 'fas fa-chevron-up';
-            }
-            event.stopPropagation();
-        }
-        
+
+        // Кнопка развернуть/свернуть всё (для Предметов)
         const expandAllBtn = document.getElementById('expandAllBtn');
-        const expandAllIcon = expandAllBtn.querySelector('i');
         let allExpanded = false;
         
         expandAllBtn.addEventListener('click', () => {
-            const contents = document.querySelectorAll('.subject-card .card-content');
-            const icons = document.querySelectorAll('.subject-card .toggle-icon i');
+            const contents = document.querySelectorAll('#view-subjects .card-content');
+            const icons = document.querySelectorAll('#view-subjects .toggle-icon');
             
             if (allExpanded) {
-                contents.forEach(content => content.classList.remove('expanded'));
-                icons.forEach(icon => icon.className = 'fas fa-chevron-down');
-                expandAllIcon.className = 'fas fa-expand-alt';
+                contents.forEach(c => c.classList.remove('expanded'));
+                icons.forEach(i => i.className = 'fas fa-chevron-down toggle-icon');
                 expandAllBtn.innerHTML = '<i class="fas fa-expand-alt"></i> Развернуть все';
                 allExpanded = false;
             } else {
-                contents.forEach(content => content.classList.add('expanded'));
-                icons.forEach(icon => icon.className = 'fas fa-chevron-up');
-                expandAllIcon.className = 'fas fa-compress-alt';
+                contents.forEach(c => c.classList.add('expanded'));
+                icons.forEach(i => i.className = 'fas fa-chevron-up toggle-icon');
                 expandAllBtn.innerHTML = '<i class="fas fa-compress-alt"></i> Свернуть все';
                 allExpanded = true;
             }
-        });
-        
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 20,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            const contents = document.querySelectorAll('.subject-card .card-content');
-            const icons = document.querySelectorAll('.subject-card .toggle-icon i');
-            
-            contents.forEach(content => content.classList.remove('expanded'));
-            icons.forEach(icon => icon.className = 'fas fa-chevron-down');
         });
     </script>
 </body>
