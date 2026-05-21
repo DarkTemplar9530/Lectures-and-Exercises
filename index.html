@@ -16,7 +16,6 @@
             --shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
             --card-hover-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
             
-            /* Цвета разделов */
             --color-diploma: #e74c3c;
             --color-practice: #f39c12;
             --color-lectures: #27ae60;
@@ -38,7 +37,7 @@
             --color-subjects: #74b9ff;
         }
 
-        * {
+        {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -94,7 +93,6 @@
             color: var(--card-bg);
         }
 
-        /* Предупреждение о долгах */
         .debts-alert {
             background-color: rgba(231, 76, 60, 0.1);
             border-left: 5px solid #e74c3c;
@@ -106,7 +104,6 @@
         
         [data-theme="dark"] .debts-alert { background-color: rgba(231, 76, 60, 0.15); }
 
-        /* --- СЕТКА ДАШБОРДА --- */
         #dashboard-view {
             animation: fadeIn 0.4s ease;
         }
@@ -173,7 +170,6 @@
         .card-subjects::before { background-color: var(--color-subjects); left: 0; width: 5px; height: 100%; }
         .card-subjects .card-icon { color: var(--color-subjects); font-size: 2.5rem; margin-bottom: 0; }
 
-        /* --- ВНУТРЕННИЕ СТРАНИЦЫ --- */
         .page-view {
             display: none;
             animation: slideIn 0.4s ease;
@@ -217,7 +213,6 @@
             gap: 10px;
         }
 
-        /* --- КОНТЕНТ ВНУТРИ СТРАНИЦ --- */
         .content-card {
             background-color: var(--card-bg);
             border-radius: 12px;
@@ -252,7 +247,6 @@
         .task-content { flex: 1; }
         .task-content strong { color: var(--accent-color); }
 
-        /* --- КНОПКИ ССЫЛОК (ЦВЕТНЫЕ) --- */
         .links {
             margin-top: 15px;
             display: flex;
@@ -273,37 +267,31 @@
             font-weight: 500;
         }
 
-        /* Видео */
         .link-btn.video { color: #8e44ad; border-color: #8e44ad; }
         .link-btn.video:hover { background-color: #8e44ad; color: #fff; }
         [data-theme="dark"] .link-btn.video { color: #a29bfe; border-color: #a29bfe; }
         [data-theme="dark"] .link-btn.video:hover { background-color: #a29bfe; color: #1a1a2e; }
 
-        /* Word */
         .link-btn.word { color: #2980b9; border-color: #2980b9; }
         .link-btn.word:hover { background-color: #2980b9; color: #fff; }
         [data-theme="dark"] .link-btn.word { color: #74b9ff; border-color: #74b9ff; }
         [data-theme="dark"] .link-btn.word:hover { background-color: #74b9ff; color: #1a1a2e; }
 
-        /* Excel */
         .link-btn.excel { color: #27ae60; border-color: #27ae60; }
         .link-btn.excel:hover { background-color: #27ae60; color: #fff; }
         [data-theme="dark"] .link-btn.excel { color: #55efc4; border-color: #55efc4; }
         [data-theme="dark"] .link-btn.excel:hover { background-color: #55efc4; color: #1a1a2e; }
 
-        /* PowerPoint */
         .link-btn.ppt { color: #d35400; border-color: #d35400; }
         .link-btn.ppt:hover { background-color: #d35400; color: #fff; }
         [data-theme="dark"] .link-btn.ppt { color: #e67e22; border-color: #e67e22; }
         [data-theme="dark"] .link-btn.ppt:hover { background-color: #e67e22; color: #1a1a2e; }
 
-        /* PDF */
         .link-btn.pdf { color: #c0392b; border-color: #c0392b; }
         .link-btn.pdf:hover { background-color: #c0392b; color: #fff; }
         [data-theme="dark"] .link-btn.pdf { color: #ff7675; border-color: #ff7675; }
         [data-theme="dark"] .link-btn.pdf:hover { background-color: #ff7675; color: #1a1a2e; }
 
-        /* Папки / Обычные ссылки */
         .link-btn.folder { color: #16a085; border-color: #16a085; }
         .link-btn.folder:hover { background-color: #16a085; color: #fff; }
         [data-theme="dark"] .link-btn.folder { color: #00cec9; border-color: #00cec9; }
@@ -312,7 +300,6 @@
         .file-link { color: #e67e22; text-decoration: none; font-weight: 500; border-bottom: 1px dashed #e67e22; }
         .file-link:hover { color: var(--accent-color); border-bottom: 1px solid var(--accent-color); }
 
-        /* Кнопка "Открыть все лекции" */
         .main-lectures-btn {
             background-color: var(--color-lectures);
             color: #fff;
@@ -334,7 +321,6 @@
             color: #1a1a2e;
         }
 
-        /* --- ОРИГИНАЛЬНЫЙ БЛОК ЛЕКЦИЙ --- */
         .lectures-section {
             margin-top: 25px;
             padding-top: 15px;
@@ -351,7 +337,6 @@
             gap: 8px;
         }
 
-        /* Предупреждения */
         .warning-box {
             background-color: rgba(231, 76, 60, 0.1);
             border-left: 4px solid #e74c3c;
@@ -368,7 +353,6 @@
             margin-top: 10px;
         }
 
-        /* --- ТАЙМЛАЙН (ГРАФИК ГИА) --- */
         .timeline-container {
             margin-top: 10px;
         }
@@ -413,7 +397,6 @@
         .timeline-item.vacation::before { border-color: #f39c12; background-color: #f39c12; }
         .timeline-item.vacation .timeline-date { color: #f39c12; }
 
-        /* --- АККОРДЕОНЫ ДЛЯ ПРЕДМЕТОВ И РАЗДЕЛОВ ДИПЛОМА --- */
         .subject-card {
             background-color: var(--card-bg);
             border-radius: 10px;
@@ -454,17 +437,14 @@
         }
         .expand-all-btn:hover { background-color: var(--accent-color); color: white; }
 
-        /* Анимации */
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-        /* Адаптивность для мобильных устройств (Строгий центр для всех карточек) */
         @media (max-width: 768px) {
             .dashboard-grid { 
                 grid-template-columns: 1fr; 
             }
             
-            /* Сбрасываем стили, чтобы все карточки на мобилке выглядели строго одинаково */
             .dash-card { 
                 flex-direction: column !important; 
                 justify-content: center !important; 
@@ -480,7 +460,6 @@
                 font-size: 3.5rem !important; 
             }
             
-            /* Полоска сверху для всех карточек */
             .dash-card::before { 
                 left: 0 !important; 
                 top: 0 !important;
@@ -511,12 +490,6 @@
         <!-- ================= ГЛАВНЫЙ ЭКРАН (ДАШБОРД) ================= -->
         <div id="dashboard-view" class="page-view active">
             
-            <div class="debts-alert">
-                <h3 style="color: #c0392b; margin-bottom: 10px;"><i class="fas fa-exclamation-triangle"></i> ВНИМАНИЕ: СРОКИ СДАЧИ ДОЛГОВ</h3>
-                <p>Долги необходимо сдать до <strong>25.04.2026</strong>.</p>
-                <p style="font-weight: bold; margin-top: 10px; color: #c0392b;">После 25.04.2026 будут сформированы приказы о допуске к диплому. Если есть долги – отчисление из института.</p>
-            </div>
-
             <div class="dashboard-grid">
                 <!-- Диплом -->
                 <div class="dash-card card-diploma" onclick="switchView('view-diploma')">
@@ -568,7 +541,7 @@
                                 <div class="task-content">
                                     <strong>Организационная информация:</strong><br>
                                     Курс в BB: <em>2025_Дипломные работы или проекты_Селина Ольга Викторовна</em><br>
-                                    Срок сдачи: <strong>10 мая 2026г.</strong><br>
+                                    Срок сдачи: <strong>26 июня 2026г.</strong><br>
                                     Название документа: <strong>Фамилия И.О., группа (раздел Экономика ВКР)</strong><br>
                                     <span style="color: #e74c3c; font-weight: bold; margin-top: 5px; display: inline-block;">Необходимо обязательно зарегистрироваться в гр. ИТ-511(З)!</span>
                                 </div>
@@ -577,7 +550,7 @@
                                 <span class="task-number">2</span>
                                 <div class="task-content">
                                     <strong>Раздел Экономика в ВКР</strong>
-                                    <div style="margin-top: 5px; font-weight: 500;">Содержание раздела (Объём 7-15 страниц):</div>
+                                    <div style="margin-top: 5px; font-weight: 500;">Содержание раздела. Объём 7-15 страниц (обязательно ознакомьтесь с лекцией. Какие-то разделы необязательны):</div>
                                     
                                     <div style="margin-top: 10px; padding-left: 15px; border-left: 3px solid var(--accent-color);">
                                         
@@ -669,7 +642,8 @@
                                 <span class="task-number">1</span>
                                 <div class="task-content">
                                     <strong>Организационная информация:</strong><br>
-                                    Курс в BB: <em>2025_Дипломные работы или проекты_Яценко Александр Сергеевич</em>
+                                    Курс в BB: <em>2025_Дипломные работы или проекты_Яценко Александр Сергеевич</em><br>
+                                    Срок сдачи: <strong>26 июня 2026г.</strong>
                                 </div>
                             </li>
                             <li>
@@ -700,12 +674,6 @@
                                 <span class="task-number">6</span>
                                 <div class="task-content">
                                     По объёму минимум 4 страницы, но до 20, ему не принципиально, главное, чтобы всё было чётко по методичке.
-                                </div>
-                            </li>
-                            <li>
-                                <span class="task-number">7</span>
-                                <div class="task-content">
-                                    По поводу сроков надо смотреть на даты из «Регламент ГИА».
                                 </div>
                             </li>
                         </ul>
@@ -1056,7 +1024,6 @@
     </main>
 
     <script>
-        // Переключение тем
         const themeToggle = document.getElementById('themeToggle');
         const savedTheme = localStorage.getItem('theme') || 
                           (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -1080,18 +1047,14 @@
             }
         }
 
-        // Логика переключения страниц (Дашборд <-> Внутренняя страница)
         function switchView(viewId) {
-            // Скрываем все виды
             document.querySelectorAll('.page-view').forEach(view => {
                 view.classList.remove('active');
             });
-            // Показываем нужный
             document.getElementById(viewId).classList.add('active');
             window.scrollTo(0, 0);
         }
 
-        // Логика аккордеонов (Для предметов и разделов диплома)
         function toggleCard(header) {
             const content = header.nextElementSibling;
             const icon = header.querySelector('.toggle-icon');
@@ -1105,7 +1068,6 @@
             }
         }
 
-        // Кнопка развернуть/свернуть всё (для Предметов)
         const expandAllBtn = document.getElementById('expandAllBtn');
         let allExpanded = false;
         
